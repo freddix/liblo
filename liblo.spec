@@ -1,11 +1,11 @@
 Summary:	Open Sound Control library
 Name:		liblo
-Version:	0.26
-Release:	4
+Version:	0.28
+Release:	1
 License:	GPL v2
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/liblo/%{name}-%{version}.tar.gz
-# Source0-md5:	5351de14262560e15e7f23865293b16f
+# Source0-md5:	e2a4391a08b49bb316c03e2034e06fa2
 URL:		http://liblo.sf.net
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -28,13 +28,16 @@ Header files and development documentation for liblo.
 %prep
 %setup -q
 
+%{__sed} -i 's/-Werror//g' configure.ac
+
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure
+%configure \
+	--disable-silent-rules
 %{__make}
 
 %install
@@ -42,6 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,7 +64,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 #%doc doc/html/*
 %attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
 %{_includedir}/lo
 %{_pkgconfigdir}/*.pc
 
